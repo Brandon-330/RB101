@@ -1,7 +1,10 @@
 def string_length(sentence)
-    strings = sentence.split
-
-    strings.map { |char| char.length }
+    words = sentence.split
+    word_lengths = []
+    
+    words.each do |word|
+        word_lengths << word.size
+    end
 end
 
 print string_length("to be or not to be")
