@@ -1,13 +1,13 @@
 def recurse(n, s)
-    if n == 1
-        return 1
-    end
+  if n == 1
+    return 1
+  end
 
-    if s == 's'
-        return n + recurse(n - 1, s)
-    elsif s == 'p'
-        return n * recurse(n - 1, s)
-    end
+  if s == 's'
+    return n + recurse(n - 1, s)
+  elsif s == 'p'
+    return n * recurse(n - 1, s)
+  end
 end
 
 puts "Please enter an integer greater than 0:"
