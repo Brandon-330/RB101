@@ -9,7 +9,7 @@
 # monthly payment from the formula, put it in a method?
 
 def prompt(s)
-  "=> #{s}"
+  puts "=> #{s}"
 end
 
 
@@ -20,15 +20,14 @@ def valid_number?(num)
 end
 
 
-def months?(input)
-  months = case input
-           when 'month' || 'months'
-             1
-           when 'year' || 'years'
-            12
-           else 
-            nil
-           end
+def months_number(input)
+  if input.match(/months?/)
+    1
+  elsif input.match(/years?/)
+    12
+  else
+    nil
+  end
 end
 
 
@@ -41,15 +40,22 @@ loan_amount = nil
 loop do
   prompt("What is your loan amount? ")
   loan_amount = gets.chomp
-  break if valid_number?(loan_amount)
+  if valid_number?(loan_amount)
+    loan_amount = loan_amount.to_f
+    break
+  else
+    prompt("That is not a valid digit!")
+  end
 end
 
 apr = nil
 loop do
   prompt("What is your APR as a percentage? ")
   apr = gets.chomp
-  if apr.endswith("%")
-    if valid_number?(apr.pop)
+  if apr.end_with?('%')
+    apr.delete!('%')
+    if valid_number?(apr)
+      apr = apr.to_f / 100
       break
     else
       prompt("Please enter a valid digit!")
@@ -63,22 +69,24 @@ loan_duration = nil
 loop do
   prompt("What is your loan duration (in months or years)? ")
   loan_duration = gets.chomp
-  loan_duration.split(" ")
-  if number_valid?(loan_duration[0])
-    if months?(loan_duration[1].downcase)
-      loan_duration = loan_duration[0].to_f * loan_duration[1].to_i
+  loan_duration = loan_duration.split(" ") rescue false
+  months = months_number(loan_duration[1].downcase) rescue false
+  if valid_number?(loan_duration[0])
+    if months
+      loan_duration = loan_duration[0].to_f * months
       break
     else
-      prompt("Please enter months or years!")
+      prompt("Hmm... did you forget to add 'months' or 'years'?")
     end
   else
     prompt("Please enter a valid digit!")
   end
 end
 
-monthly_payment = formula(loan_amount, apr, loan_duration)
 
-prompt("Your monthly payment is #{monthly_payment}!")
+monthly_payment = formula(loan_amount.to_f, apr, loan_duration)
+
+prompt("Your monthly payment is #{monthly_payment.round(2)}!")
 
 
 
