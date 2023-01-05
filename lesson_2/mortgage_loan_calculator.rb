@@ -50,12 +50,12 @@ end
 
 apr = nil
 loop do
-  prompt("What is your APR as a percentage? ")
+  prompt("What is your Annual Percentage Rate (APR) as a percentage? ")
   apr = gets.chomp
   if apr.end_with?('%')
     apr.delete!('%')
     if valid_number?(apr)
-      apr = apr.to_f / 100
+      apr = apr.to_f / (100 * 12)
       break
     else
       prompt("Please enter a valid digit!")
