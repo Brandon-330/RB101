@@ -86,7 +86,7 @@ end
 
 monthly_payment = formula(loan_amount.to_f, apr, loan_duration)
 
-prompt("Your monthly payment is #{monthly_payment.round(2)}!")
+prompt("Your monthly payment is #{format('%.2f', monthly_payment)}!")
 
 
 
