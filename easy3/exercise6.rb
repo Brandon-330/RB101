@@ -1,4 +1,5 @@
 def xor?(a, b)
+  return false if a && b
   a || b
 end
 
