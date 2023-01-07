@@ -1,5 +1,9 @@
 def crunch(s)
-  p s.split('').uniq.join
+  new_s = ''
+  s.chars.map.with_index do |char, index|
+    new_s << char if char != s[index - 1] || index == 0
+  end
+  new_s
 end
 
 p crunch('ddaaiillyy ddoouubbllee') == 'daily double'
