@@ -1,6 +1,5 @@
 def crunch(s)
-  s.gsub!(/\w{2}/, '')
-  p s
+  p s.split('').uniq.join
 end
 
 p crunch('ddaaiillyy ddoouubbllee') == 'daily double'
