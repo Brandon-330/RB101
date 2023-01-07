@@ -1,7 +1,8 @@
 def leap_year?(n)
-  return true if (n % 4 == 0) && (n <= 1752)
-  return true if (n % 400) && (n % 100) && (n >= 1752)
-  (n % 4 == 0)
+  if (n >= 1752) && (n % 100 == 0)
+    return n % 400 == 0 
+  end
+  n % 4 == 0
 end
 
 p leap_year?(2016)
