@@ -8,9 +8,9 @@ def dms(n)
     minutes = (decimal.to_f / 100) * MINUTES_IN_HOUR
     minutes, decimal = minutes.to_s.split('.')
     seconds = (seconds.to_f / 100) * SECONDS_IN_MINUTE
-    "%(#{degrees}#{DEGREE}#{format('%02d', minutes)}\'#{format('%02d', seconds)}\")"
+    %Q(%(#{degrees}#{DEGREE.force_encoding('utf-8')}#{format('%02d', minutes)}'#{format('%02d', seconds)}"))
   else
-    "%(#{n}#{DEGREE}00\'00\")"
+    %Q(%(#{n}#{DEGREE.encode(Encoding::UTF8)}00'00"))
   end
 end
 
