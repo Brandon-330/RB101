@@ -1,4 +1,6 @@
-DEGREE = '\xC2\xB0'
+require 'uri'
+
+DEGREE = '\xc2\xb0'
 MINUTES_IN_HOUR = 60
 SECONDS_IN_MINUTE = 60
 
@@ -8,9 +10,9 @@ def dms(n)
     minutes = (decimal.to_f / 100) * MINUTES_IN_HOUR
     minutes, decimal = minutes.to_s.split('.')
     seconds = (seconds.to_f / 100) * SECONDS_IN_MINUTE
-    %Q(%(#{degrees}#{DEGREE.force_encoding('utf-8')}#{format('%02d', minutes)}'#{format('%02d', seconds)}"))
+    %Q(%(#{degrees}#{format(DEGREE)}#{format('%02d', minutes)}'#{format('%02d', seconds)}"))
   else
-    %Q(%(#{n}#{DEGREE.encode(Encoding::UTF8)}00'00"))
+    %Q(%(#{n}#{format(DEGREE)}00'00"))
   end
 end
 
