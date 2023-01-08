@@ -1,21 +1,24 @@
-# Prompt user for a choice between rock, paper, or scissors
+# Prompt user for a choice between rock, paper, or scis
+# sors
 # Create a method which picks 1 element from a rock, paper, scissor array
 # if statements to determine who won
 
-VALID_CHOICES = ['rock', 'paper', 'scissors']
+VALID_CHOICES = %w(rock paper scissors)
 
 def prompt(message)
   Kernel.puts("=> #{message}")
 end
 
-display_reults(player, computer)
-  if (player == 'rock' && computer == 'scissors') ||
-     (player == 'paper' && computer == 'rock') ||
-     (player == 'scissors' && computer == 'paper')
+def win?(first, second)
+  (first == 'rock' && second == 'scissors') ||
+    (first == 'paper' && second == 'rock') ||
+    (first == 'scissors' && second == 'paper')
+end
+
+def display_results(player, computer)
+  if win?(player, computer)
     prompt("You won!")
-  elsif (player == 'scissors' && computer == 'rock') ||
-        (player == 'rock' && computer == 'paper') ||
-        (player == 'paper' && computer == 'scissors')
+  elsif win?(computer, player)
     prompt("You lost!")
   else
     prompt("It is a tie!")
