@@ -12,17 +12,15 @@ end
 def player_choice(choice)
   choice.downcase!
   if choice.start_with?('r')
-    "rock"
+    'rock'
   elsif choice.start_with?('p')
-    "paper"
+    'paper'
   elsif choice.start_with?('l')
-    "lizard"
+    'lizard'
   elsif choice.start_with?('sc')
-    "scissors"
+    'scissors'
   elsif choice.start_with?('sp')
-    "spock"
-  else
-    nil
+    'spock'
   end
 end
 
@@ -63,13 +61,13 @@ player_wins, computer_wins = 0, 0
 loop do
   choice = nil
   loop do
-    prompt("Choose one: #{VALID_CHOICES.join(", ")} (or type 'r', 'p', 'l', 'sc', or 'sp')")
+    prompt("Choose one: #{VALID_CHOICES.join(', ')} (or type 'r', 'p', 'l', 'sc', or 'sp')")
     choice = player_choice(Kernel.gets().chomp())
 
     if VALID_CHOICES.include?(choice)
       break
     else
-      prompt("That is not a valid choice!")
+      prompt('That is not a valid choice!')
     end
   end
 
@@ -81,11 +79,11 @@ loop do
 
   player_wins, computer_wins = scoreboard(choice, computer_choice, player_wins, computer_wins)
   if player_wins == 3
-    prompt("The grand winner is you!")
+    prompt('The grand winner is you!')
   elsif computer_wins == 3
-    prompt("The grand winner is the computer!")
+    prompt('The grand winner is the computer!')
   end
   break if player_wins == 3 || computer_wins == 3
 end
 
-prompt("Thank you for playing. Have a great day!")
+prompt('Thank you for playing. Have a great day!')
