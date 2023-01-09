@@ -1,10 +1,10 @@
-def string_length(sentence)
-  words = sentence.split
-  word_lengths = []
-  
-  words.each do |word|
-    word_lengths << word.size
-  end
+user_input = gets
+
+loop do
+  name = user_input
+  break
 end
 
-print string_length("to be or not to be")
+if user_input
+  puts "Hello " + name
+end
