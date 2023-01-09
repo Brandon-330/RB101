@@ -1,0 +1,1 @@
+10.times { |x| puts (print " " * x, "The Flintstones Rock")}
