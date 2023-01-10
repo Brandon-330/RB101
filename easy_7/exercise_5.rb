@@ -1,13 +1,15 @@
 def staggered_case(s)
   new_s = ''
   s.each_char.with_index do |char, ind| 
-    if !!char.match(/[a-zA-Z]/) && ind.odd?
-      new_s << char.swapcase
+    if !!char.match(/[a-zA-Z]/) && ind.even?
+      new_s << char.upcase
+    elsif !!char.match(/[a-zA-Z]/) && ind.odd?
+      new_s << char.downcase
     else
       new_s << char
     end
   end
-  p new_s
+  new_s
 end
 
 p staggered_case('I Love Launch School!') == 'I LoVe lAuNcH ScHoOl!'
