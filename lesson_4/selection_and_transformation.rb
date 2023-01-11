@@ -34,4 +34,32 @@
 # rules:
   # Same length array returned
   # modifid number based on if odd indices
-double_odd_numbers(arr)
+# def double_odd_numbers(arr)
+#   new_arr = []
+#   counter = 0
+#   loop do
+#     break if counter == arr.size
+#     new_arr[counter] = arr[counter].odd? ? arr[counter] * 2 : arr[counter]
+#     counter += 1
+#   end
+#   new_arr
+# end
+
+# my_numbers = [1, 4, 3, 7, 2, 6]
+# p double_odd_numbers(my_numbers)  # => [2, 4, 6, 14, 2, 6]
+
+# p my_numbers                      # => [1, 4, 3, 7, 2, 6]
+
+def multiply(arr, n)
+  new_arr = []
+  counter = 0
+  loop do
+    break if counter == arr.size
+    new_arr[counter] = arr[counter] * n
+    counter += 1
+  end
+  new_arr
+end
+
+p my_numbers = [1, 4, 3, 7, 2, 6]
+p multiply(my_numbers, 3) # => [3, 12, 9, 21, 6, 18]
