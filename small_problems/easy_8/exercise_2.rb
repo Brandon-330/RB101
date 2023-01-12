@@ -1,10 +1,11 @@
 def leading_substrings(s)
-  new_arr = []
-  while s.size > 0
-    new_arr.push(s)
-    s.chop!
+  counter = 1
+  arr = []
+  while s.size >= counter
+    arr << s[0, counter]
+    counter += 1
   end
-  p new_arr 
+  arr
 end
 
 p leading_substrings('abc') == ['a', 'ab', 'abc']

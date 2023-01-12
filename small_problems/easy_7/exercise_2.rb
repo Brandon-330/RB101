@@ -1,11 +1,18 @@
 def letter_case_count(s)
-  case_count_hash = Hash.new(0)
+  case_count_hash = { lowercase: 0, uppercase: 0, neither: 0 }
+  
   s.each_char do |char|
-    case_count_hash[:lowercase] += 1 if char.downcase
-    case_count_hash[:uppercase] += 1 if char.upcase
-    case_count_hash[:neither] += 1 if !char.upcase && !char.downcase
+    case char
+    when /[a-z]/
+      case_count_hash[:lowercase] += 1
+    when /[A-Z]/
+      case_count_hash[:uppercase] += 1
+    else 
+      case_count_hash[:neither] += 1
+    end
   end
-  p case_count_hash
+
+  case_count_hash
 end
 
 p letter_case_count('abCdef 123') == { lowercase: 5, uppercase: 1, neither: 4 }
