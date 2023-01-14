@@ -1,3 +1,7 @@
+def print_family_stats(hash)
+  hash.each { |key, hash| puts "#{key} is a #{hash['age']}-year-old #{hash['gender']}." }
+end
+
 munsters = {
   "Herman" => { "age" => 32, "gender" => "male" },
   "Lily" => { "age" => 30, "gender" => "female" },
@@ -6,9 +10,4 @@ munsters = {
   "Marilyn" => { "age" => 23, "gender" => "female"}
 }
 
-sum = 0
-munsters.select! { |keys, hash| p hash['gender'] == "male" }
-p munsters
-munsters.each { |keys, hash| sum += hash['age'] }
-
-p sum
+print_family_stats(munsters)
