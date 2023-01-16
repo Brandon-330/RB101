@@ -11,7 +11,7 @@ end
 
 def max_rotation(digits)
 4.times do |count|
-    digits = rotate_rightmost_digits(digits[count, -1], count)
+    digits = rotate_rightmost_digits(digits, count + 1)
   end
   p digits
 end
