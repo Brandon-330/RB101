@@ -1,11 +1,12 @@
-def rotate_array(arr, n)
+def rotate_array(arr)
   new_arr = arr.dup
-  new_arr << new_arr.shift(n).join
+  new_arr << new_arr.shift
 end
 
 def rotate_rightmost_digits(digits, n)
-  rotated_arr = rotate_array(digits.to_s.split(''), n)
-  p rotated_arr.map(&:to_i).join
+  digits_arr = digits.to_s.split('')
+  digits_arr += rotate_array(digits_arr.pop(n))
+  digits_arr.join.to_i
 end
 
 p rotate_rightmost_digits(735291, 1) == 735291
