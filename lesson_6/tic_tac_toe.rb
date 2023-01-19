@@ -69,3 +69,7 @@ board = [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
 show_board(board)
 
 choice = player_turn(board)
+
+### next steps, do a computer turn
+# do win condition
+# do a tie condition
