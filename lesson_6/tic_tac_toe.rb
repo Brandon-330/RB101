@@ -91,29 +91,36 @@ end
 
 # Marks are how many spots computer has on board in a line, or diagonal
 def offensive?(current_board, number_of_marks)
-  rows_hash = return_rows_hash(current_board)
-  columns_hash = return_columns_hash(current_board)
-  diagonals_hash = return_diagonals_hash(current_board)
+  rows_hashes_list = return_rows_hash(current_board)
+  columns_hashes_list = return_columns_hash(current_board)
+  diagonals_hashes_list = return_diagonals_hash(current_board)
 
-  p rows_hash
-  p columns_hash
-  p diagonals_hash
+  p diagonals_hashes_list
 
-  # Check diagonals first, since it is considered more powerful on board
-  diagonals_hash.each do |hash|
-    marks = hash.values.count { |el| el == 'O' }
-    free_space = hash.values.count { |el| el == nil }
 
-    if (marks == number_of_marks) && (marks + free_space == 3)
-      computer_choice = hash.select { |_, v| v == nil }
-      
-      if computer_choice.size > 1
-        # Prioritzise the middle of the board
-        return [true, computer_choice.keys.select { |k| k == 5 }]
-        # If not, just pick a random square
-        return [true, computer_choice.keys[0]]
-      else
-        return [true, computer_choice.key]
+  3.times do |iteration|
+    case iteration
+    when 0 then hash_list = diagonals_hashes_list
+    when 1 then hash_list = columns_hashes_list
+    when 2 then hash_list = rows_hashes_list
+    end
+    
+    # Check diagonals first, since it is considered more powerful on board
+    hash_list.each do |hash|
+      marks = hash.values.count { |el| el == 'O' }
+      free_space = hash.values.count { |el| el == nil }
+
+      if (marks == number_of_marks) && (marks + free_space == 3)
+        computer_choice = hash.select { |_, v| v == nil }
+        
+        if computer_choice.size > 1
+          # Prioritize the middle of the board
+          return 5 if computer_choice.keys.any? { |k| k == 5 }
+          # If not, just pick a random square
+          return computer_choice.keys[0]
+        else
+          return computer_choice.key
+        end
       end
     end
   end
@@ -186,13 +193,16 @@ end
 # Each array inside board array is a row
 board = [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
 
-show_board(board)
+loop do
+  show_board(board)
 
-player_choice = player_turn(board)
-board = mark_board(board, player_choice, 'X')
+  player_choice = player_turn(board)
+  board = mark_board(board, player_choice, 'X')
 
-computer_choice = computer_turn(board)
-board = mark_board(board, computer_choice, 'O')
+  computer_choice = computer_turn(board)
+  board = mark_board(board, computer_choice, 'O')
+  #break if tie?(board)
+end
 ### next steps, do a computer turn
 # do win condition
 # do a tie condition
