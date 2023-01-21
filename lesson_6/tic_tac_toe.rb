@@ -14,6 +14,7 @@ def prompt(s)
   puts "=> #{s}"
 end
 
+
 def show_board(current_board)
   current_board.each_with_index do |row_arr, ind|
     # Just to make it look pretty
@@ -29,18 +30,20 @@ def show_board(current_board)
   end
 end
 
+
 def valid_choice?(choice, current_board)
   counter = 0
   current_board.each do |row_arr|
     row_arr.each do |el|
-      counter += 1
-      if counter == choice && !el
-        return true
-      end
+      counter += 1      
+      return true if counter == choice && !el
+
     end
   end
+
   false
 end
+
 
 def mark_board(current_board, choice, symbol)
   row_number = (choice.to_f / 3).ceil - 1
@@ -50,6 +53,7 @@ def mark_board(current_board, choice, symbol)
   current_board[row_number][element_place] = symbol
   current_board
 end
+
 
 def player_turn(current_board)
   # Populate array with numbers as possible choices
@@ -78,28 +82,117 @@ def player_turn(current_board)
   choice.to_i
 end
 
-# marks are how many spots computer has on board
-def offensive?(current_board, number_of_marks)
-  # Let's check each row first (possible horizontal win)
-  counter = 0
-  current_board.each_with_index do |row_arr, ind|
-    marks_count = row_arr.count { |el| el == 'O' }# LEFT OFF HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-    return true if row.size == number_of_marks
-  end
-end
 
 def computer_turn(current_board)
   # Check for a computer win condition first
   offensive?(current_board, 2)
 end
+
+
+# Marks are how many spots computer has on board in a line, or diagonal
+def offensive?(current_board, number_of_marks)
+  rows_hash = return_rows_hash(current_board)
+  columns_hash = return_columns_hash(current_board)
+  diagonals_hash = return_diagonals_hash(current_board)
+
+  p rows_hash
+  p columns_hash
+  p diagonals_hash
+
+  # Check diagonals first, since it is considered more powerful on board
+  
+
+  # Check diagonals, since it is more powerful on the board
+  # diagonals.each_with_index do |diagonal, ind|
+  #   marks = diagonal.count { |el| el == 'O' }
+  #   free_space = diagonal.count { |el| el == nil }
+  # end
+
+  # return [true, ind] if (marks == number_of_marks) && (free_space + marks == 3)
+
+
+  # counter = 0
+  # rows.each_with_index do |row_arr, ind|
+  #   marks_count = row_arr.count { |el| el == 'O' }# LEFT OFF HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+  #   return true if row.size == number_of_marks
+  # end
+end
+
+
+def return_rows_hash(current_board)
+  rows_hashes_list = []
+
+  counter = 1
+  current_board.each_with_index do |row|
+    temp_hash = Hash.new
+    row.each do |el|
+      temp_hash[counter] =  el
+      counter += 1
+    end
+
+    rows_hashes_list << temp_hash
+  end
+  
+  rows_hashes_list
+end
+
+
+def return_columns_hash(current_board)
+  columns_hashes_list = []
+
+  counter = 1
+  3.times do |ind|
+    temp_hash = Hash.new
+    current_board.each do |row|
+      temp_hash[counter] = row[ind]
+      counter += 3
+    end
+    columns_hashes_list << temp_hash
+    counter -= 8
+  end
+
+  columns_hashes_list
+end
+
+
+def return_diagonals_hash(current_board)
+  temp_hash_1 = Hash.new
+  temp_hash_2 = Hash.new
+  diagonals_hashes_list = []
+
+  counter = 1
+  current_board.each do |row|
+    row.each do |el|
+      if (counter == 1 || counter == 9)
+        temp_hash_1 [counter] = el
+      
+      elsif (counter == 3 || counter == 7)
+        temp_hash_2 [counter] = el
+        
+      elsif counter == 5
+        temp_hash_1 [counter] = el
+        temp_hash_2 [counter] = el
+      end
+      
+      counter += 1
+    end
+  end
+
+  diagonals_hashes_list << temp_hash_1 << temp_hash_2
+  diagonals_hashes_list
+end
+
 # Board starts out with no values inside, we set it to nil
 # Each array inside board array is a row
 board = [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
 
 show_board(board)
 
-choice = player_turn(board)
-board = mark_board(board, choice, 'X')
+player_choice = player_turn(board)
+board = mark_board(board, player_choice, 'X')
+
+computer_choice = computer_turn(board)
+board = mark_board(board, computer_choice, 'O')
 ### next steps, do a computer turn
 # do win condition
 # do a tie condition
