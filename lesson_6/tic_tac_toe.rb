@@ -85,7 +85,7 @@ end
 
 def computer_turn(current_board)
   # Check for a computer win condition first
-  offensive?(current_board, 2)
+  offensive?(current_board, 0)
 end
 
 
@@ -100,22 +100,23 @@ def offensive?(current_board, number_of_marks)
   p diagonals_hash
 
   # Check diagonals first, since it is considered more powerful on board
-  
+  diagonals_hash.each do |hash|
+    marks = hash.values.count { |el| el == 'O' }
+    free_space = hash.values.count { |el| el == nil }
 
-  # Check diagonals, since it is more powerful on the board
-  # diagonals.each_with_index do |diagonal, ind|
-  #   marks = diagonal.count { |el| el == 'O' }
-  #   free_space = diagonal.count { |el| el == nil }
-  # end
-
-  # return [true, ind] if (marks == number_of_marks) && (free_space + marks == 3)
-
-
-  # counter = 0
-  # rows.each_with_index do |row_arr, ind|
-  #   marks_count = row_arr.count { |el| el == 'O' }# LEFT OFF HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-  #   return true if row.size == number_of_marks
-  # end
+    if (marks == number_of_marks) && (marks + free_space == 3)
+      computer_choice = hash.select { |_, v| v == nil }
+      
+      if computer_choice.size > 1
+        # Prioritzise the middle of the board
+        return [true, computer_choice.keys.select { |k| k == 5 }]
+        # If not, just pick a random square
+        return [true, computer_choice.keys[0]]
+      else
+        return [true, computer_choice.key]
+      end
+    end
+  end
 end
 
 
@@ -129,7 +130,6 @@ def return_rows_hash(current_board)
       temp_hash[counter] =  el
       counter += 1
     end
-
     rows_hashes_list << temp_hash
   end
   
