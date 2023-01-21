@@ -85,7 +85,15 @@ end
 
 def computer_turn(current_board)
   # Check for a computer win condition first
-  offensive?(current_board, 0)
+  counter = 2
+  loop do
+    attack, choice = offensive?(current_board, counter)
+    return choice if attack == true
+    counter -= 1
+    break if counter < 0
+  end
+
+  random_choice(current_board)
 end
 
 
@@ -94,8 +102,6 @@ def offensive?(current_board, number_of_marks)
   rows_hashes_list = return_rows_hash(current_board)
   columns_hashes_list = return_columns_hash(current_board)
   diagonals_hashes_list = return_diagonals_hash(current_board)
-
-  p diagonals_hashes_list
 
 
   3.times do |iteration|
@@ -115,13 +121,26 @@ def offensive?(current_board, number_of_marks)
         
         if computer_choice.size > 1
           # Prioritize the middle of the board
-          return 5 if computer_choice.keys.any? { |k| k == 5 }
+          return [true, 5] if computer_choice.keys.any? { |k| k == 5 }
           # If not, just pick a random square
-          return computer_choice.keys[0]
+          return [true, computer_choice.keys[0]]
         else
-          return computer_choice.key
-        end
+          return [true, computer_choice.key]
+        end     
       end
+    end
+  end
+
+  false
+end
+
+
+def random_choice(current_board)
+# If nothing returns, select a random free space
+  rows_hashes_list = return_rows_hash(current_board)
+  rows_hashes_list.each do |hash|
+    hash.each do |k, v|
+      return k if v == nil
     end
   end
 end
@@ -189,19 +208,49 @@ def return_diagonals_hash(current_board)
   diagonals_hashes_list
 end
 
+
+# def win?(current_board)
+#   rows_hashes_list = return_rows_hash(current_board)
+#   columns_hashes_list = return_columns_hash(current_board)
+#   diagonals_hashes_list = return_diagonals_hash(current_board)
+
+#   3.times do |iteration|
+#     case iteration
+#     when 0 then hash_list = diagonals_hashes_list
+#     when 1 then hash_list = columns_hashes_list
+#     when 2 then hash_list = rows_hashes_list
+#     end
+
+#     hash_list.each do |hash|
+#       hash.each do |_, v|
+#         return [true, v] if 
+
+# end
+
+def tie?(current_board)
+  current_board.each do |row|
+    is_tie = row.all? { |el| el }
+    return false if is_tie == false
+  end
+  
+  true
+end
+
 # Board starts out with no values inside, we set it to nil
 # Each array inside board array is a row
 board = [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
 
 loop do
   show_board(board)
+  sleep(2)
 
   player_choice = player_turn(board)
   board = mark_board(board, player_choice, 'X')
+  break if tie?(board) || win?(board)
 
   computer_choice = computer_turn(board)
   board = mark_board(board, computer_choice, 'O')
-  #break if tie?(board)
+  break if tie?(board) || win?(board)
 end
 ### next steps, do a computer turn
 # do win condition
