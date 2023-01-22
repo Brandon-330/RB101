@@ -39,6 +39,7 @@ def show_board(current_board)
   puts ""
 end
 
+
 def available_choices(current_board)
   # Populate array with numbers as possible choices
   counter = 0
@@ -52,8 +53,10 @@ def available_choices(current_board)
       end
     end
   end
+
   available_choices
 end
+
 
 def mark_board(current_board, choice, symbol)
   row_number = (choice.to_f / 3).ceil - 1
@@ -114,7 +117,6 @@ def computer_turn(current_board)
   # If the game looks like a draw, generate random choices
   random_choice(current_board)
 end
-
 
 # Marks are how many spots computer has on board in a line, or diagonal
 def offensive?(current_board, number_of_marks)
@@ -258,6 +260,7 @@ def return_diagonals_hash(current_board)
   diagonals_hashes_list
 end
 
+
 def win?(current_board)
   rows_hashes_list = return_rows_hash(current_board)
   columns_hashes_list = return_columns_hash(current_board)
@@ -282,6 +285,7 @@ def win?(current_board)
   [false]
 end
 
+
 def tie?(current_board)
   current_board.each do |row|
     is_tie = row.all? { |el| el }
@@ -290,6 +294,7 @@ def tie?(current_board)
   
   [true, "It is a draw!"]
 end
+
 
 loop do
   puts("Welcome to tic tac toe!")
