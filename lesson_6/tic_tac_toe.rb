@@ -10,6 +10,9 @@
 #   case 3: if player makes two random moves, computer must play to win
 #           by checking for its own 2 marks first, otherwise 1 mark
 
+# ^^^ Ended up using a hash anyway, just in a different way
+# The computer is still probable to lose when working with smart diagonals moves
+
 def prompt(s)
   puts "=> #{s}"
 end
@@ -136,9 +139,9 @@ def offensive?(current_board, number_of_marks)
           # Prioritize the middle of the board
           return [true, 5] if computer_choice.keys.any? { |k| k == 5 }
           # If not, just pick a random square
-          return [true, computer_choice.keys[0]]
+          return [true, computer_choice.keys.sample]
         else
-          return [true, computer_choice.key]
+          return [true, computer_choice.keys[0]]
         end     
       end
     end
@@ -167,7 +170,7 @@ def defensive?(current_board)
 
       if (marks == 2) && (marks + free_space == 3)
         computer_choice = hash.select { |_, v| v == nil }
-        return [true, computer_choice.keys[0]]
+        return [true, computer_choice.keys.sample]
       end
     end
   end
@@ -179,11 +182,14 @@ end
 def random_choice(current_board)
 # If nothing returns, select a random free space
   rows_hashes_list = return_rows_hash(current_board)
+  random_arr = []
   rows_hashes_list.each do |hash|
     hash.each do |k, v|
-      return k if v == nil
+      random_arr << k if v == nil
     end
   end
+
+  random_arr.sample
 end
 
 
@@ -250,50 +256,67 @@ def return_diagonals_hash(current_board)
 end
 
 
-# def win?(current_board)
-#   rows_hashes_list = return_rows_hash(current_board)
-#   columns_hashes_list = return_columns_hash(current_board)
-#   diagonals_hashes_list = return_diagonals_hash(current_board)
+def win?(current_board)
+  rows_hashes_list = return_rows_hash(current_board)
+  columns_hashes_list = return_columns_hash(current_board)
+  diagonals_hashes_list = return_diagonals_hash(current_board)
 
-#   3.times do |iteration|
-#     case iteration
-#     when 0 then hash_list = diagonals_hashes_list
-#     when 1 then hash_list = columns_hashes_list
-#     when 2 then hash_list = rows_hashes_list
-#     end
+  3.times do |iteration|
+    case iteration
+    when 0 then hash_list = diagonals_hashes_list
+    when 1 then hash_list = columns_hashes_list
+    when 2 then hash_list = rows_hashes_list
+    end
 
-#     hash_list.each do |hash|
-#       hash.each do |_, v|
-#         return [true, v] if 
+    hash_list.each do |hash|
+      if hash.values.all? { |v| v == 'X' }
+        return [true, "Congratulations, the player wins!"]
+      elsif hash.values.all? { |v| v == 'O' }
+        return [true, "The computer wins!"]
+      end
+    end
+  end
 
-# end
+  [false]
+end
 
 def tie?(current_board)
   current_board.each do |row|
     is_tie = row.all? { |el| el }
-    return false if is_tie == false
+    return [false] if is_tie == false
   end
   
-  true
+  [true, "It is a draw!"]
 end
 
-# Board starts out with no values inside, we set it to nil
-# Each array inside board array is a row
-board = [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
 
 loop do
-  show_board(available_choices(board))
-  show_board(board)
+  puts("Welcome to tic tac toe!")
+  sleep(1)
+  
+  # Board starts out with no values inside, we set it to nil
+  # Each array inside board array is a row
+  board = [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
 
-  player_choice = player_turn(board)
-  board = mark_board(board, player_choice, 'X')
-  break if tie?(board) #|| win?(board)
+  loop do
+    show_board(available_choices(board))
+    show_board(board)
 
-  computer_choice = computer_turn(board)
-  board = mark_board(board, computer_choice, 'O')
-  break if tie?(board) #|| win?(board)
+    player_choice = player_turn(board)
+    board = mark_board(board, player_choice, 'X')
+    break if tie?(board)[0] || win?(board)[0]
 
+    computer_choice = computer_turn(board)
+    board = mark_board(board, computer_choice, 'O')
+    break if tie?(board)[0] || win?(board)[0]
+  end
+
+  puts tie?(board)[1] if tie?(board)[0] == true
+  puts win?(board)[1] if win?(board)[0] == true
+
+  prompt("Would you like to play again?")
+  answer = gets.chomp
+  break unless answer.downcase == 'y'
 end
-### next steps, do a computer turn
-# do win condition
-# do a tie condition
+
+puts "Thank you for playing!"
