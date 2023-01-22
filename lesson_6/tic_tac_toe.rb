@@ -330,7 +330,7 @@ loop do
 
   prompt("Would you like to play again?")
   answer = gets.chomp
-  break unless answer.downcase == 'y'
+  break unless answer.downcase.start_with?('y')
 end
 
 puts "Thank you for playing!"
