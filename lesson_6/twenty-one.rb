@@ -1,29 +1,26 @@
-# Formulate full deck (52 cards)
-cards = Hash.new
-Array(1..10).each do |el|
-  cards[el] = el
-end
-cards["Jack"], cards["Queen"], cards["King"], cards["Ace"] = 10, 10, 10, 11
-deck = [cards, cards, cards, cards]
+def create_deck()
+  cards = Hash.new
+  Array(1..10).each do |el|
+    cards[el] = el
+  end
+  cards["Jack"], cards["Queen"], cards["King"], cards["Ace"] = 10, 10, 10, 11
 
-p rand(deck.size)
+  [cards, cards, cards, cards]
+end
 
 def draw_card(deck)
   index = rand(deck.size)
   hash = deck[index]
 
   random_card = hash.keys.sample
-  {random_card => hash[random_card]}
-  # hash.each do |k, v|
-  #   k, v
-  # index = rand(deck.size)
-  # cards = deck.sample
-  # random_card = cards.sample
-  
-  # random_card
+  card = {random_card => hash[random_card]}
+  hash.delete(random_card)
+  card
 end
 
-draw_card(deck)
-player_cards = []
-dealer_cards = []
+deck = create_deck()
+player_cards, dealer_cards = [], []
 
+player_cards << draw_card(deck)
+p player_cards
+p deck
