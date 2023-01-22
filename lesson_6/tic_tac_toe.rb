@@ -82,6 +82,15 @@ def valid_choice?(choice, current_board)
 end
 
 
+def turn(current_board, is_player_turn)
+  if is_player_turn
+    [player_turn(current_board), 'X']
+  else
+    [computer_turn(current_board), 'O']
+  end
+end
+
+
 def player_turn(current_board)
   # Prompt for a valid choice
   choice = nil
@@ -299,21 +308,21 @@ end
 loop do
   puts("Welcome to tic tac toe!")
   sleep(1)
+
+  prompt("Would you like to go first?")
+  is_player_turn = true if gets.chomp.downcase.start_with?('y')
   # Board starts out with no values inside, we set it to nil
   # Each array inside board array is a row
   board = [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
 
   loop do
-    show_board(available_choices(board))
-    show_board(board)
+    show_board(available_choices(board)) if is_player_turn
+    show_board(board) if is_player_turn
 
-    player_choice = player_turn(board)
-    board = mark_board(board, player_choice, 'X')
+    choice, symbol = turn(board, is_player_turn)
+    board = mark_board(board, choice, symbol)
     break if tie?(board)[0] || win?(board)[0]
-
-    computer_choice = computer_turn(board)
-    board = mark_board(board, computer_choice, 'O')
-    break if tie?(board)[0] || win?(board)[0]
+    is_player_turn = !is_player_turn
   end
 
   puts tie?(board)[1] if tie?(board)[0] == true
