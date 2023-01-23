@@ -27,10 +27,11 @@ def show_player_cards(card_hashes)
     hash.keys.each(&:to_s)
   end
   puts "You have: " + key_list[0..-2].join(', ') + " and #{key_list[-1][0]}"
+  puts
 end
 
-def score(card_in_hand)
-  values_arr = card_in_hand.map do |hash|
+def score(cards_in_hand)
+  values_arr = cards_in_hand.map do |hash|
     hash.values[0]
   end
   values_arr.sum
@@ -47,19 +48,32 @@ def ask_player()
   answer
 end
 
+def check_ace(cards_in_hand, score)
+  is_ace_found = false
+  cards_in_hand.each do |hash|
+    hash.each do |k, v| 
+      if k == "Ace" && v == 11 && !is_ace_found
+        is_ace_found = !is_ace_found
+        hash[k] = v - 10
+      end
+    end
+  end
+  [cards_in_hand, score(cards_in_hand)]
+end
+
 def win?(player_score, dealer_score)
   if player_score > 21 && dealer_score > 21
     "It is a tie, you both blew with you having #{player_score} and dealer having #{dealer_score}!"
-  elsif player_score < 21 && player_score > dealer_score
-    "The player wins with #{player_score} and dealer with #{dealer_score}!"
-  elsif dealer_score < 21 && player_score < dealer_score
-    "The dealer wins with #{dealer_score} and you with #{player_score}!"
+  elsif player_score <= 21 && player_score > dealer_score
+    "The player wins with #{player_score} and dealer lose with #{dealer_score}!"
+  elsif dealer_score <= 21 && player_score < dealer_score
+    "The dealer wins with #{dealer_score} and you lose with #{player_score}"
   elsif player_score == dealer_score
     "It is a tie, you ended with #{player_score} and dealer with #{dealer_score}"
   elsif player_score > 21
-    "The dealer wins! You blew with you having #{player_score} and dealer having #{dealer_score}"
+    "The dealer wins. You blew by having #{player_score} and dealer wins by having #{dealer_score}"
   elsif dealer_score > 21
-    "The player wins with #{player_score} and dealer blows with #{dealer_score}"
+    "The player wins with #{player_score} and dealer blows with #{dealer_score}!"
   end
 end
 
@@ -71,17 +85,28 @@ player_cards << draw_card(deck) << draw_card(deck)
 dealer_cards << draw_card(deck) << draw_card(deck)
 
 loop do
+  puts
   puts "Dealer has: #{dealer_cards[0].keys[0]} and unknown card"
   show_player_cards(player_cards)
   player_score = score(player_cards)
 
+  # If player score is greater than 21, reassign ace value
+  if player_score > 21 
+    player_cards, player_score = check_ace(player_cards, player_score)
+  end
+
+  break if player_score > 21 
   answer = ask_player()
-  break if player_score > 21 || answer.downcase == 'stay'
+  break unless answer.downcase == 'hit'
   player_cards << draw_card(deck)
 end
 
 loop do
   dealer_score = score(dealer_cards)
+  if dealer_score > 21
+    dealer_cards, dealer_score = check_ace(dealer_cards, dealer_score)
+  end
+
   break if dealer_score >= 17
   dealer_cards << draw_card(deck)
 end
