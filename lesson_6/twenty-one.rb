@@ -30,19 +30,42 @@ def show_player_cards(card_hashes)
 end
 
 def score(card_in_hand)
-  card_in_hand.each do |hash|
-    sum = hash.values.inject(&:+)
+  values_arr = card_in_hand.map do |hash|
+    hash.values[0]
   end
-  
-  if sum > 21
-    card_in_hand.each do |hash|
-      hash.keys.each do |key|
-        if key == "Ace"
-          sum -= 10
+  values_arr.sum
+end
+
+def ask_player()
+  answer = ''
+  loop do
+    puts "=> Would you like to hit or stay?"
+    answer = gets.chomp
+    break if answer.downcase == 'hit' || answer.downcase == 'stay'
+    puts 'That is not a valid choice! Pick "hit" or "stay"'
+  end
+  answer
+end
+
+def win?(player_score, dealer_score)
+  if player_score > 21 && dealer_score > 21
+    "It is a tie, you both blew with you having #{player_score} and dealer having #{dealer_score}!"
+  elsif player_score < 21 && player_score > dealer_score
+    "The player wins with #{player_score} and dealer with #{dealer_score}!"
+  elsif dealer_score < 21 && player_score < dealer_score
+    "The dealer wins with #{dealer_score} and you with #{player_score}!"
+  elsif player_score == dealer_score
+    "It is a tie, you ended with #{player_score} and dealer with #{dealer_score}"
+  elsif player_score > 21
+    "The dealer wins! You blew with you having #{player_score} and dealer having #{dealer_score}"
+  elsif dealer_score > 21
+    "The player wins with #{player_score} and dealer blows with #{dealer_score}"
+  end
 end
 
 deck = create_deck()
 player_cards, dealer_cards = [], []
+player_score, dealer_score = 0, 0
 
 player_cards << draw_card(deck) << draw_card(deck)
 dealer_cards << draw_card(deck) << draw_card(deck)
@@ -50,7 +73,17 @@ dealer_cards << draw_card(deck) << draw_card(deck)
 loop do
   puts "Dealer has: #{dealer_cards[0].keys[0]} and unknown card"
   show_player_cards(player_cards)
-  score()
-  break
+  player_score = score(player_cards)
+
+  answer = ask_player()
+  break if player_score > 21 || answer.downcase == 'stay'
+  player_cards << draw_card(deck)
 end
 
+loop do
+  dealer_score = score(dealer_cards)
+  break if dealer_score >= 17
+  dealer_cards << draw_card(deck)
+end
+
+puts win?(player_score, dealer_score)
