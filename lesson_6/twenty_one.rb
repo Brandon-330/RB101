@@ -15,8 +15,8 @@ def draw_card(deck)
 
   # Random card from the sampled cards
   random_card = hash.keys.sample
-  card = {random_card => hash[random_card]}
-  
+  card = { random_card => hash[random_card] }
+
   # Update cards from sampled symbol, and return card key/value
   deck[index] = hash.reject { |k, _| k == random_card }
   card
@@ -26,7 +26,7 @@ def show_cards(card_hashes)
   key_list = card_hashes.map do |hash|
     hash.keys.each(&:to_s)
   end
-  "#{key_list[0..-2].join(', ')}" + ' and ' + "#{key_list[-1][0]}"
+  key_list[0..-2].join(', ') + ' and ' + key_list[-1][0].to_s
 end
 
 def score(cards_in_hand)
@@ -47,10 +47,10 @@ def ask_player()
   answer
 end
 
-def check_ace(cards_in_hand, score)
+def check_ace(cards_in_hand)
   is_ace_found = false
   cards_in_hand.each do |hash|
-    hash.each do |k, v| 
+    hash.each do |k, v|
       if k == "Ace" && v == 11 && !is_ace_found
         is_ace_found = !is_ace_found
         hash[k] = v - 10
@@ -92,11 +92,11 @@ loop do
     player_score = score(player_cards)
 
     # If player score is greater than 21, reassign ace value
-    if player_score > 21 
-      player_cards, player_score = check_ace(player_cards, player_score)
+    if player_score > 21
+      player_cards, player_score = check_ace(player_cards)
     end
 
-    break if player_score > 21 
+    break if player_score > 21
     answer = ask_player()
     break unless answer.downcase == 'hit'
     player_cards << draw_card(deck)
@@ -105,7 +105,7 @@ loop do
   loop do
     dealer_score = score(dealer_cards)
     if dealer_score > 21
-      dealer_cards, dealer_score = check_ace(dealer_cards, dealer_score)
+      dealer_cards, dealer_score = check_ace(dealer_cards)
     end
 
     break if dealer_score >= 17
