@@ -111,4 +111,6 @@ loop do
   dealer_cards << draw_card(deck)
 end
 
+show_player_cards(dealer_cards)
+show_player_cards(player_cards)
 puts win?(player_score, dealer_score)
