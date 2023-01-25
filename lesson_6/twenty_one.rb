@@ -1,4 +1,15 @@
-def create_deck()
+def valid_game
+  answer = ''
+  loop do
+    puts "Game will work until what value?"
+    answer = gets.chomp
+    break if answer.to_i > 0
+    puts "Invalid option, please choose a positive number"
+  end
+  answer.to_i
+end
+
+def create_deck
   cards = Hash.new
   Array(1..10).each do |el|
     cards[el] = el
@@ -36,7 +47,7 @@ def score(cards_in_hand)
   values_arr.sum
 end
 
-def ask_player()
+def ask_player
   answer = ''
   loop do
     puts "=> Would you like to hit or stay?"
@@ -61,20 +72,24 @@ def check_ace(cards_in_hand)
 end
 
 def win?(player_score, dealer_score)
-  if player_score > 21 && dealer_score > 21
+  if player_score > BUST_RULE && dealer_score > BUST_RULE
     "It is a tie, you both blew with you having #{player_score} and dealer having #{dealer_score}!"
-  elsif player_score <= 21 && player_score > dealer_score
+  elsif player_score <= BUST_RULE && player_score > dealer_score
     "The player wins with #{player_score} and dealer lose with #{dealer_score}!"
-  elsif dealer_score <= 21 && player_score < dealer_score
+  elsif dealer_score <= BUST_RULE && player_score < dealer_score
     "The dealer wins with #{dealer_score} and you lose with #{player_score}"
   elsif player_score == dealer_score
     "It is a tie, you ended with #{player_score} and dealer with #{dealer_score}"
-  elsif player_score > 21
+  elsif player_score > BUST_RULE
     "The dealer wins. You blew by having #{player_score} and dealer wins by having #{dealer_score}"
-  elsif dealer_score > 21
+  elsif dealer_score > BUST_RULE
     "The player wins with #{player_score} and dealer blows with #{dealer_score}!"
   end
 end
+
+puts "Welcome to twenty one!"
+sleep(1)
+BUST_RULE = valid_game()
 
 loop do
   deck = create_deck()
@@ -91,12 +106,12 @@ loop do
     puts
     player_score = score(player_cards)
 
-    # If player score is greater than 21, reassign ace value
-    if player_score > 21
+    # If player score is greater than BUST_RULE, reassign ace value
+    if player_score > BUST_RULE
       player_cards, player_score = check_ace(player_cards)
     end
 
-    break if player_score > 21
+    break if player_score > BUST_RULE
     answer = ask_player()
     break unless answer.downcase == 'hit'
     player_cards << draw_card(deck)
@@ -104,11 +119,11 @@ loop do
 
   loop do
     dealer_score = score(dealer_cards)
-    if dealer_score > 21
+    if dealer_score > BUST_RULE
       dealer_cards, dealer_score = check_ace(dealer_cards)
     end
 
-    break if dealer_score >= 17
+    break if dealer_score >= (BUST_RULE - 4)
     dealer_cards << draw_card(deck)
   end
 
