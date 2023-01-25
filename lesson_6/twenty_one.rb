@@ -22,12 +22,11 @@ def draw_card(deck)
   card
 end
 
-def show_player_cards(card_hashes)
+def show_cards(card_hashes)
   key_list = card_hashes.map do |hash|
     hash.keys.each(&:to_s)
   end
-  puts "You have: " + key_list[0..-2].join(', ') + " and #{key_list[-1][0]}"
-  puts
+  "#{key_list[0..-2].join(', ')}" + ' and ' + "#{key_list[-1][0]}"
 end
 
 def score(cards_in_hand)
@@ -77,38 +76,49 @@ def win?(player_score, dealer_score)
   end
 end
 
-deck = create_deck()
-player_cards, dealer_cards = [], []
-player_score, dealer_score = 0, 0
-
-player_cards << draw_card(deck) << draw_card(deck)
-dealer_cards << draw_card(deck) << draw_card(deck)
-
 loop do
+  deck = create_deck()
+  player_cards, dealer_cards = [], []
+  player_score, dealer_score = 0, 0
+
+  player_cards << draw_card(deck) << draw_card(deck)
+  dealer_cards << draw_card(deck) << draw_card(deck)
+
+  loop do
+    puts
+    puts "Dealer has: #{dealer_cards[0].keys[0]} and unknown card"
+    puts "You have: #{show_cards(player_cards)}"
+    puts
+    player_score = score(player_cards)
+
+    # If player score is greater than 21, reassign ace value
+    if player_score > 21 
+      player_cards, player_score = check_ace(player_cards, player_score)
+    end
+
+    break if player_score > 21 
+    answer = ask_player()
+    break unless answer.downcase == 'hit'
+    player_cards << draw_card(deck)
+  end
+
+  loop do
+    dealer_score = score(dealer_cards)
+    if dealer_score > 21
+      dealer_cards, dealer_score = check_ace(dealer_cards, dealer_score)
+    end
+
+    break if dealer_score >= 17
+    dealer_cards << draw_card(deck)
+  end
+
+  puts "=" * 40
+  puts "Dealer has: #{show_cards(dealer_cards)}"
+  puts "You have: #{show_cards(player_cards)}"
   puts
-  puts "Dealer has: #{dealer_cards[0].keys[0]} and unknown card"
-  show_player_cards(player_cards)
-  player_score = score(player_cards)
 
-  # If player score is greater than 21, reassign ace value
-  if player_score > 21 
-    player_cards, player_score = check_ace(player_cards, player_score)
-  end
-
-  break if player_score > 21 
-  answer = ask_player()
-  break unless answer.downcase == 'hit'
-  player_cards << draw_card(deck)
+  puts win?(player_score, dealer_score)
+  puts
+  puts "Would you like to play again?"
+  break unless gets.chomp.downcase.start_with?('y')
 end
-
-loop do
-  dealer_score = score(dealer_cards)
-  if dealer_score > 21
-    dealer_cards, dealer_score = check_ace(dealer_cards, dealer_score)
-  end
-
-  break if dealer_score >= 17
-  dealer_cards << draw_card(deck)
-end
-
-puts win?(player_score, dealer_score)
