@@ -1,13 +1,17 @@
 def transpose(arr)
   counter = 0
-  arr.map do |inner_arr| 
-    temp = []
-    1.times do |ind|
-      temp << arr[ind][counter]
+  transposed = []
+  arr.each do |inner_arr|
+    while counter < inner_arr.size
+      temp = []
+      (arr.size).times do |ind|
+        temp << arr[ind][counter]
+      end
+      counter += 1
+      transposed << temp
     end
-    counter += 1
-    temp
   end
+  transposed
 end
 
 p transpose([[1, 2, 3, 4]]) == [[1], [2], [3], [4]]
