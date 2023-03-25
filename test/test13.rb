@@ -1,36 +1,53 @@
-=begin 5:13
+=begin
+53 03
 ### Problem
-# Input: 2 arguments (integer, integer)
-# Output: Rotated Integer
+# Input: String
+# Output: String 
 
-## Rules:
+## Rules
 # Explicit:
-- Rotate the rightmost digit left 
+- Every 2nd character in every 3 words are converted to upcase
 
 # Implicit:
+- Can mutate original string
 
-
-### Data Structure:
-# Transform integer to string
-- This time, we can mutate the original integer (perfect!)
-
+### Data Structure
+# ind1 = -1
+# #split #map do |word|
+  - ind1 += 1
+  - if word == 3
+      - ind2 = -1
+      - #word.chars.map do |char|
+        ind2 += 1
+        - if ind2.odd?
+            char.upcase
+          else
+            char.downcase
+          end
+        end.join('')
 =end
 
-def rotate_rightmost_digits(number, rotate)
-  number = number.to_s.split('')
-  rotate.times do |ind|
-    if (ind + 2) >= number.size
-      number[0], number[-1] = number[-1], number[0]
+def to_weird_case(str)
+  ind1 = 0
+  str.split(' ').map do |word|
+    ind1 += 1
+    if ind1 % 3 == 0
+      ind2 = 0
+      word.chars.map do |char|
+        ind2 += 1
+        if ind2.even?
+          char.upcase
+        else
+          char
+        end
+      end.join('')
     else
-      number[-(ind + 2)], number[-(ind + 1)] = number[-(ind + 1)], number[-(ind + 2)]
+      word
     end
-  end
-  p number.join('').to_i
+  end.join(' ')
 end
 
-p rotate_rightmost_digits(735291, 1) == 735291
-p rotate_rightmost_digits(735291, 2) == 735219
-p rotate_rightmost_digits(735291, 3) == 735912
-p rotate_rightmost_digits(735291, 4) == 732915
-p rotate_rightmost_digits(735291, 5) == 752913
-p rotate_rightmost_digits(735291, 6) == 352917
+p to_weird_case('Lorem Ipsum is simply dummy text of the printing') == 'Lorem Ipsum iS simply dummy tExT of the pRiNtInG'
+p to_weird_case('It is a long established fact that a reader will be distracted') == 'It is a long established fAcT that a rEaDeR will be dIsTrAcTeD'
+p to_weird_case('aaA bB c') == 'aaA bB c'
+p to_weird_case('Miss Mary Poppins word is supercalifragilisticexpialidocious') == 'Miss Mary POpPiNs word is sUpErCaLiFrAgIlIsTiCeXpIaLiDoCiOuS'

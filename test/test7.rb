@@ -1,31 +1,50 @@
-=begin 9:36
+=begin
+28 43
 ### Problem
-# input: integer
-# output: integer
+# Input: Array (of integers)
+# Output: Array (with 2 integers)
+
+## Questions
+- Will the array always have 2 or more integers?
+- Will it always be integer elements?
 
 ## Rules
 # Explicit:
-- Add all numbers until n, and then square it
-- Subtract by (sum(n**2))
+- The output must have the two closest numbers together in value
 
-### Data structure
-# Create an array with all the numbers in it
-- #inject(0) on it
-- Once finished, raise it to the second power
-- Do #inject(0) on it again, element the second power
-- Subtract both results
+### Data Structure
+# lowest_difference = ((arr[0] + arr[1]) / 2) - arr[0]
+# output = [arr[0], arr[1]]
+# #each_with_index the original array
+  - #each_with_index the original array again
+    - if ind1 != ind2
+        if ((el1 + el2) / 2) - el1 < lowest_difference
+          lowest_difference = ((el1 + el2) / 2) - el1
+          #condition here => output = [el1, el2]
+        end
+      end
+    end
+  end
+end
 =end
 
-def sum_square_difference(n)
-  arr = (1..n).to_a
-  sum_square = arr.inject(0) { |total, num| total + num }**2
-  square_sum = arr.inject(0) { |total, num| total + num**2 }
+def closest_numbers(arr)
+  lowest_diff = ((arr[0] + arr[1])/ 2) - arr[0]
+  output = [arr[0], arr[1]]
+  arr.each_with_index do |el1, ind1|
+    arr.each_with_index do |el2, ind2|
+      if ind1 != ind2
+        if (((el1 + el2) / 2) - el1).abs < lowest_diff
+          lowest_diff = (((el1 + el2) / 2) - el1).abs
+          output = [el1, el2]
+        end
+      end
+    end
+  end
 
-  sum_square - square_sum
+  arr.select { |num| num == output[0] || num == output[1] }
 end
 
-p sum_square_difference(3) == 22
-   # -> (1 + 2 + 3)**2 - (1**2 + 2**2 + 3**2)
-p sum_square_difference(10) == 2640
-p sum_square_difference(1) == 0
-p sum_square_difference(100) == 25164150
+p closest_numbers([5, 25, 15, 11, 20]) == [15, 11]
+p closest_numbers([19, 25, 32, 4, 27, 16]) == [25, 27]
+p closest_numbers([12, 7, 17]) == [12, 7]

@@ -1,44 +1,43 @@
 =begin
+07
 ### Problem
-input: integer
-output: integer
+# Input: Array of integers
+# Output: sum of the minimum 5 consecutive numbers in array
 
-## rules:
-# explicit:
-return next featured number after given number
-featured number consists of
-- odd number
-- AND multiple of 7
-- AND digit must occur once, not twice
+## Rules
+- Return nil if arr.size < 5
+- Return the minimum sum of 5 consecutive numbers
 
-### Data structure
-# array to iterate through all the numbers and make sure it is uniq
-arr.uniq.size == arr.size
+### Data Structure
+# #slice to determine consecutive numbers
+# #inject(&:+)
 
-# To determine multiple of 7, % 7 == 0, if not number, then minus remainder + 7 until odd
-=end
-
-def featured(n)
-  arr = n.to_s.split('')
-  loop do
-    return "There is no possible number that fulfills those requirements" if arr.size > 10
-    if n.odd?
-      n = n - (n % 7) + 14
-    else
-      n = n - (n % 7) + 7
-    end
-    arr = n.to_s.split('')
-    break if arr.uniq == arr && n.odd? && n % 7 == 0
-  end
-  n
+# lowest_sum = 0
+# ind = 0
+# while ind < arr.size - 5
+  - sum = arr[ind, 5].sum
+  - lowest_sum = sum if sum > lowest_sum
+  - ind += 1
 end
 
-p featured(12) == 21
-p featured(20) == 21
-p featured(21) == 35
-p featured(997) == 1029
-p featured(1029) == 1043
-p featured(999_999) == 1_023_547
-p featured(999_999_987) == 1_023_456_987
+lowest_num
+=end
 
-#featured(9_999_999_999) # -> There is no possible number that fulfills those requirements
+def minimum_sum(arr)
+  return nil if arr.size < 5
+
+  lowest_sum = arr[0, 5].sum # First 5 considered lowest sum
+  ind = 1 # Start from index of 1 because we already took the first 5 into consideration
+  while ind < arr.size - 5
+    sum = arr[ind, 5].inject(&:+)
+    lowest_sum = sum if sum < lowest_sum
+    ind += 1
+  end
+
+  lowest_sum
+end
+
+p minimum_sum([1, 2, 3, 4]) == nil
+p minimum_sum([1, 2, 3, 4, 5, 6]) == 15
+p minimum_sum([55, 2, 6, 5, 1, 2, 9, 3, 5, 100]) == 16
+p minimum_sum([-1, -5, -3, 0, -1, 2, -4]) == -10

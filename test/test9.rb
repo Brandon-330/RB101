@@ -1,51 +1,58 @@
-=begin 10:10
+=begin
+27
 ### Problem
-# Input: string
-# Output: hash (containing :lowercse, :uppercase, and :neither)
+# Input: String
+# Output: String
 
-# Questions:
-- Numbers and spaces are considered neither?
-- Always are strings?
-
-## Rules:
+## Rules
 # Explicit:
-- String contains at least 1 character
+- Return longest sentence
+- Sentences end with . ! or ?
 
-# Implicit:
-- Hash will always contain the same keys
+### Data Structure
+# #split(/[.!?]/)
+# #map to create a nested array, where sub_arr[0] == sentence, and sub_arr[1] == sentence.split(' ').size
 
-### Data structure
-# hash = {}
-# string.chars.each 
-- case char
-  - ('A'..'Z') do
-    lowercase + 1
-  - ('a'..'z') do
-    uppercase + 1
-  - else do
-    neither + 1
+=end
+
+def longest_sentence(str)
+  sentences = str.split(/[.!?]/)
+
+  longest_sentence = 'a'
+  sentences.each do |sentence|
+    longest_sentence = sentence if sentence.split(' ').size > longest_sentence.split(' ').size
   end
-end 10:26
-=end 
 
-def letter_percentages(string)
-  hash = { lowercase: 0, uppercase: 0, neither: 0}
-
-  string.chars.each do |char|
-    case char
-    when ('a'..'z') then hash[:lowercase] += 1
-    when ('A'..'Z') then hash[:uppercase] += 1
-    else hash[:neither] += 1
-    end
-  end
-  size = string.size
-  hash[:lowercase] = (hash[:lowercase].to_f / size) * 100
-  hash[:uppercase] = (hash[:uppercase].to_f / size) * 100
-  hash[:neither] = (hash[:neither].to_f / size) * 100
-
-  hash
+  p [longest_sentence, longest_sentence.split(' ').size]
 end
 
-p letter_percentages('abCdef 123') == { lowercase: 50.0, uppercase: 10.0, neither: 40.0 }
-p letter_percentages('AbCd +Ef') == { lowercase: 37.5, uppercase: 37.5, neither: 25.0 }
-p letter_percentages('123') == { lowercase: 0.0, uppercase: 0.0, neither: 100.0 }
+longest_sentence('Four score and seven years ago our fathers brought forth
+  on this continent a new nation, conceived in liberty, and
+  dedicated to the proposition that all men are created equal.
+  
+  Now we are engaged in a great civil war, testing whether
+  that nation, or any nation so conceived and so dedicated,
+  can long endure. We are met on a great battlefield of that
+  war. We have come to dedicate a portion of that field, as
+  a final resting place for those who here gave their lives
+  that that nation might live. It is altogether fitting and
+  proper that we should do this.
+  
+  But, in a larger sense, we can not dedicate, we can not
+  consecrate, we can not hallow this ground. The brave
+  men, living and dead, who struggled here, have
+  consecrated it, far above our poor power to add or
+  detract. The world will little note, nor long remember
+  what we say here, but it can never forget what they
+  did here. It is for us the living, rather, to be dedicated
+  here to the unfinished work which they who fought
+  here have thus far so nobly advanced. It is rather for
+  us to be here dedicated to the great task remaining
+  before us -- that from these honored dead we take
+  increased devotion to that cause for which they gave
+  the last full measure of devotion -- that we here highly
+  resolve that these dead shall not have died in vain
+  -- that this nation, under God, shall have a new birth
+  of freedom -- and that government of the people, by
+  the people, for the people, shall not perish from the
+  earth.')

@@ -1,46 +1,64 @@
 =begin
+17 27
 ### Problem
-input: array
-output: array of same object
+# Input: String
+# Output: String
 
-questions:
-are all the arrays going to include the same objects inside of them?
+## Question
+- Can I mutate original object? 
+- Always contain more than 3 words?
+- Always have more than 2 characters?
 
-rules:
-select one number and evaluate it through the array, switching the numbers
+## Rules
+# Explicit:
+- Every 3rd word has every 2nd character upcased
 
-### data structure
-# while loop until swap? = false
-# iterate through array
-# each_with_index iteration to determine the st
+### Data Structure
+# word_counter = 0
+# #split(' ') original array and #map
+  - word_counter += 1
+  - if word_counter == 3
+      ind = 0
+      #chars #map do 
+        ind += 1
+        if ind.even?
+          char.upcase
+        else
+          char
+        end
+      end.join('')
+    else
+      word
+    end
+  end.join(' ')
 =end
 
-def bubble_sort!(array)
-  loop do
-    swap = false
-    array.each_with_index do |el, ind|
-      if ind >= 1
-        if el < array[ind - 1]
-          temp = el
-          array[ind] = array[ind - 1]
-          array[ind - 1] = temp
-          swap = true
+def to_weird_case(string)
+  word_counter = 0
+  string.split(' ').map do |word|
+    word_counter += 1
+    if word_counter % 3 == 0
+      ind = 0
+      word.chars.map do |char|
+        ind += 1
+        if ind.even?
+          char.upcase
+        else
+          char
         end
-      end
+      end.join('')
+    else
+      word
     end
-    break unless swap
-  end
-  p array
+  end.join(' ')
 end
 
-array = [5, 3]
-bubble_sort!(array)
-array == [3, 5]
-
-array = [6, 2, 7, 1, 4]
-bubble_sort!(array)
-array == [1, 2, 4, 6, 7]
-
-array = %w(Sue Pete Alice Tyler Rachel Kim Bonnie)
-bubble_sort!(array)
-array == %w(Alice Bonnie Kim Pete Rachel Sue Tyler)
+p to_weird_case('Lorem Ipsum is simply dummy text of the printing') ==
+                'Lorem Ipsum iS simply dummy tExT of the pRiNtInG'
+p to_weird_case(
+  'It is a long established fact that a reader will be distracted') ==
+  'It is a long established fAcT that a rEaDeR will be dIsTrAcTeD'
+p to_weird_case('aaA bB c') == 'aaA bB c'
+p to_weird_case(
+  'Miss Mary Poppins word is supercalifragilisticexpialidocious') ==
+  'Miss Mary POpPiNs word is sUpErCaLiFrAgIlIsTiCeXpIaLiDoCiOuS'

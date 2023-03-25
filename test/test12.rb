@@ -1,38 +1,40 @@
-=begin 5:02
+=begin
+46 53
 ### Problem
-Input: Array
-Output: New Array with 1st element to the last
+# Input: Array (of integers)
+# Output: Integer, or NilClass
 
 ## Rules
-# Explicit:
-- Cannot mutate original array
-- First element to the end of a new array
+# Explicit: 
+- If arr.size < 5, return nil
+- Return the minimum sum of 5 consecutive numbers
 
-# Implicit:
-- All objects inside array are same type
-- If there is only 1 element, return it
+# Implicit
+- Only integers are input
 
-### Data structure
-# Iterate through the whole array with index
-# Create a temporary variable
-5:09
+### Data Structure
+# Break down into sub arrays with 5 total elements
+# #slice works well with this by [ind, 5]
+# return early if arr#Size < 5
+# While loop to create the sub_arrays
+  - Evaluate each sub_arr with lowest_sum
 =end
 
-def rotate_array(arr)
-  temp = arr[0]
-  new_arr = []
-  arr.each do |el|
-    new_arr << el
+def minimum_sum(arr)
+  return nil if arr.size < 5
+
+  lowest_sum = arr[0, 5].inject(&:+)
+  ind = 1
+  while ind + 5 <= arr.size
+    comparables = arr[ind, 5].inject(&:+)
+    lowest_sum = comparables if comparables < lowest_sum
+    ind += 1
   end
-  new_arr << temp
-  new_arr.shift
-  new_arr
+
+  lowest_sum
 end
 
-p rotate_array([7, 3, 5, 2, 9, 1]) == [3, 5, 2, 9, 1, 7]
-p rotate_array(['a', 'b', 'c']) == ['b', 'c', 'a']
-p rotate_array(['a']) == ['a']
-
-p x = [1, 2, 3, 4]
-p rotate_array(x) == [2, 3, 4, 1]   # => true
-p x == [1, 2, 3, 4]                 # => true
+p minimum_sum([1, 2, 3, 4]) == nil
+p minimum_sum([1, 2, 3, 4, 5, 6]) == 15
+p minimum_sum([55, 2, 6, 5, 1, 2, 9, 3, 5, 100]) == 16
+p minimum_sum([-1, -5, -3, 0, -1, 2, -4]) == -10

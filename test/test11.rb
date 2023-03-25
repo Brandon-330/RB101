@@ -1,37 +1,32 @@
-=begin 4:51
+=begin
+34 - 45
 ### Problem
-# Input: Integer
-# Output: Print diamond
+# Input: Array (of integers)
+# Output: Array (of integers)
 
 ## Rules
 # Explicit:
-- n is an odd integer
-- Print it based on an n x n grid
+- Transform each element of the array by the number of integers less than it
+- If a given number occurs multiple times in an arry, it should only be counted once
 
 # Implicit:
-- First line is blank
+- Only Integers
+- Never a empty array
 
-### Data structure
-spaces start with (n - 1) / 2, and then counter it down
-star counter + 2 every iteration until space counter <= 0
-Afterwards, while loop until star counter < 1
-4:59
+### Data Structure
+# #map array to transform each digit do |num|
+  - original arr #uniq #count { |comparables| num > comparables}
+
 =end
 
-def diamond(n)
-  puts ""
-  space_counter = (n - 1) / 2
-  star_counter = 1
-  while space_counter > 0
-    puts " " * space_counter + "*" * star_counter
-    space_counter -= 1
-    star_counter += 2
-  end
-  while star_counter >= 1
-    puts " " * space_counter + "*" * star_counter
-    space_counter += 1
-    star_counter -= 2
+def smaller_numbers_than_current(arr)
+  arr.map do |num|
+    arr.uniq.count { |comparables| num > comparables }
   end
 end
 
-diamond(5)
+p smaller_numbers_than_current([8,1,2,2,3]) == [3, 0, 1, 1, 2]
+p smaller_numbers_than_current([1,4,6,8,13,2,4,5,4]) == [0, 2, 4, 5, 6, 1, 2, 3, 2]
+p smaller_numbers_than_current([7,7,7,7]) == [0,0,0,0]
+p smaller_numbers_than_current([6,5,4,8]) == [2, 1, 0, 3]
+p smaller_numbers_than_current([1]) == [0]
